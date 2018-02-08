@@ -6,33 +6,52 @@ import HomePage from "./HomePage";
 import FuelSavingsPage from "./containers/FuelSavingsPage";
 import AboutPage from "./AboutPage";
 import NotFoundPage from "./NotFoundPage";
-
-// This is a class-based component because the current
-// version of hot reloading won't hot reload a stateless
-// component at the top-level.
+import AddProduct from "./AddProduct";
+import { Menu } from "semantic-ui-react";
 
 class App extends React.Component {
+  state = {};
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
   render() {
-    const activeStyle = { color: "red" };
+    const { activeItem } = this.state;
     return (
       <div>
-        <div>
-          <NavLink exact to="/" activeStyle={activeStyle}>
-            Home
+        <Menu>
+          <NavLink exact to="/">
+            <Menu.Item
+              name="home"
+              active={activeItem === "home"}
+              onClick={this.handleItemClick}
+            >
+              Home
+            </Menu.Item>{" "}
           </NavLink>
-          {" | "}
-          <NavLink to="/fuel-savings" activeStyle={activeStyle}>
-            test
+          <NavLink to="/fuel-savings">
+            <Menu.Item
+              name="test"
+              active={activeItem === "test"}
+              onClick={this.handleItemClick}
+            >
+              test
+            </Menu.Item>
           </NavLink>
-          {" | "}
-          <NavLink to="/about" activeStyle={activeStyle}>
-            About
+          <NavLink to="/about">
+            <Menu.Item
+              name="about"
+              active={activeItem === "about"}
+              onClick={this.handleItemClick}
+            >
+              About
+            </Menu.Item>
           </NavLink>
-        </div>
+        </Menu>
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/fuel-savings" component={FuelSavingsPage} />
           <Route path="/about" component={AboutPage} />
+          <Route path="/add-products" component={AddProduct} />
           <Route component={NotFoundPage} />
         </Switch>
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Button } from "semantic-ui-react";
 
 const HomePage = () => {
   return (
@@ -12,6 +13,9 @@ const HomePage = () => {
           Review the <Link to="/fuel-savings">list</Link>
         </li>
         <li>test</li>
+        <Button color="green">
+          <Link to="/add-products">Add Product</Link>
+        </Button>
       </ol>
     </div>
   );
