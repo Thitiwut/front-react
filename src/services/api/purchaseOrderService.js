@@ -55,7 +55,7 @@ export default class purchaseOrderService {
 	cancelPurchaseOrder(po_id){
 		axios.post(URL + '/po', {
 			action: 'cancel_purchase_order',
-			product_id: product_id
+			po_id: po_id
 		})
 		.then(function (response) {
 			return response;
