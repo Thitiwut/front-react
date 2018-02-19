@@ -3,10 +3,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Switch, NavLink, Route } from "react-router-dom";
 import HomePage from "./HomePage";
-import FuelSavingsPage from "./containers/FuelSavingsPage";
-import AboutPage from "./AboutPage";
 import NotFoundPage from "./NotFoundPage";
-import AddProduct from "./AddProduct";
+
+import ProductPage from "./containers/product/ProductPage";
+import PurchaseOrderPage from "./containers/purchase_order/PurchaseOrderPage";
 import { Menu } from "semantic-ui-react";
 
 class App extends React.Component {
@@ -28,30 +28,30 @@ class App extends React.Component {
               Home
             </Menu.Item>{" "}
           </NavLink>
-          <NavLink to="/fuel-savings">
+          <NavLink to="/po">
             <Menu.Item
-              name="test"
-              active={activeItem === "test"}
+              name="po"
+              active={activeItem === "po"}
               onClick={this.handleItemClick}
             >
-              test
+              Purchase Order
             </Menu.Item>
           </NavLink>
-          <NavLink to="/about">
+          <NavLink to="/product">
             <Menu.Item
-              name="about"
-              active={activeItem === "about"}
+              name="product"
+              active={activeItem === "product"}
               onClick={this.handleItemClick}
             >
-              About
+              Product
             </Menu.Item>
           </NavLink>
+
         </Menu>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route path="/fuel-savings" component={FuelSavingsPage} />
-          <Route path="/about" component={AboutPage} />
-          <Route path="/add-products" component={AddProduct} />
+          <Route path="/po" component={PurchaseOrderPage} />
+          <Route path="/product" component={ProductPage} />
           <Route component={NotFoundPage} />
         </Switch>
       </div>

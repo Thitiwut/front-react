@@ -5,9 +5,9 @@ import { Button } from "semantic-ui-react";
 const HomePage = () => {
   return (
     <div>
-      <h1>The Liam</h1>
+      <h1>Order Management</h1>
 
-      <h2>Test React</h2>
+      <h2>Plan</h2>
       <ol>
         <li>
           Review the <Link to="/fuel-savings">list</Link>
