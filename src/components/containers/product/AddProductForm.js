@@ -56,7 +56,6 @@ export class AddProductForm extends React.Component {
   }
 
   addProduct(){
-    console.log(this.state);
     let promise = this._productService.addProduct(
       this.state.product_name, this.state.product_type, this.state.supplier
       );

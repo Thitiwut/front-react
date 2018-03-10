@@ -50,30 +50,25 @@ export class ProductService {
 	}
 
 	editProduct(product_id, product_name){
-		axios.post(URL + '/product', {
+		return axios.post(URL + '/product', {
 			action: 'edit_product',
 			product_id: product_id,
 			product_name: product_name
-		})
-		.then(function (response) {
-			return response;
-		})
+		}, config)
 		.catch(function (error) {
 			console.log(error);
 		});
 	}
 
-	setProductPrice(product_id, product_name, active_date, price){
-		axios.post(URL + '/product', {
+	setProductPrice(product_id, supplier_id, active_date, price){
+		return axios.post(URL + '/product', {
 			action: 'set_product_price',
 			product_id: product_id,
-			product_name: product_name,
+			supplier_id: supplier_id,
 			active_date: active_date,
 			price: price
-		})
-		.then(function (response) {
-			return response;
-		})
+		}, config
+		)
 		.catch(function (error) {
 			console.log(error);
 		});

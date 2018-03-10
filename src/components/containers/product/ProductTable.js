@@ -19,7 +19,8 @@ export class ProductTable extends React.Component {
       productData: [],
       supplierData: [],
       direction: null,
-      selected_supplier: "เลือก Supplier"
+      selected_supplier: "เลือก Supplier",
+      selected_suplier_id: null
     };
   }
 
@@ -47,13 +48,14 @@ export class ProductTable extends React.Component {
   }
 
   handleRowClick = row_productData => () => {
-    const { productData, selected_supplier } = this.state
-    this.refs.productModal.handleOpen(row_productData, selected_supplier);
+    const { productData, selected_supplier, selected_suplier_id } = this.state
+    this.refs.productModal.handleOpen(row_productData, selected_supplier, selected_suplier_id);
   }
 
   handleSupplierSelect(event, data){
     this.setState({
       selected_supplier: event.target.innerText,
+      selected_suplier_id: data.value
     });
     this.getProducts(data.value);
   }
