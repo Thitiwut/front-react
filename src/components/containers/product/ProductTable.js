@@ -5,37 +5,36 @@ import {connect} from 'react-redux';
 import { Table , Dropdown } from 'semantic-ui-react';
 
 import { ProductModal } from './ProductModal';
-
-//PRODUCTS MOCKUP
-const productList = [
-  {"product_id":1,"product_name":"ส้มสายน้ำผึ้ง#84","product_type":"Regular","product_number":"175474","product_price":100.0},
-  {"product_id":2,"product_name":"ส้มสายน้ำผึ้ง#72","product_type":"Regular","product_number":"205474","product_price":34.0},
-  {"product_id":3,"product_name":"ส้มสายน้ำผึ้ง#105","product_type":"Regular","product_number":"155474","product_price":54.0}
-]
-
-//SUPPLIER MOCKUP
-const suppliers = [
-  { key: '27781', text: 'นลินี', value: '27781' },
-  { key: '31049', text: 'bbb fresh foods', value: '31049' },
-  { key: '31048', text: 'bbb direct', value: '31048' },
-  { key: '31781', text: 'ทัศพงษ์', value: '31781' }
-];
+import { ProductService } from '../../../services/api/ProductService';
+import { SupplierService } from '../../../services/api/SupplierService';
 
 export class ProductTable extends React.Component {
-  state = {
-    column: null,
-    data: productList,
-    direction: null,
-    selected_supplier: "เลือก Supplier",
+
+  constructor(props) {
+    super(props);
+    this._productService = new ProductService();
+    this._supplierService = new SupplierService();
+    this.state = {
+      column: null,
+      productData: [],
+      supplierData: [],
+      direction: null,
+      selected_supplier: "เลือก Supplier",
+      selected_suplier_id: null
+    };
+  }
+
+  componentDidMount() {
+    this.getSuppliers();
   }
 
   handleSort = clickedColumn => () => {
-    const { column, data, direction } = this.state
+    const { column, productData, direction } = this.state
 
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        data: _.sortBy(data, [clickedColumn]),
+        productData: _.sortBy(productData, [clickedColumn]),
         direction: 'ascending',
       })
 
@@ -43,29 +42,54 @@ export class ProductTable extends React.Component {
     }
 
     this.setState({
-      data: data.reverse(),
+      productData: productData.reverse(),
       direction: direction === 'ascending' ? 'descending' : 'ascending',
     })
   }
 
-  handleRowClick = row_data => () => {
-    const { data, selected_supplier } = this.state
-    this.refs.productModal.handleOpen(row_data, selected_supplier);
+  handleRowClick = row_productData => () => {
+    const { productData, selected_supplier, selected_suplier_id } = this.state
+    this.refs.productModal.handleOpen(row_productData, selected_supplier, selected_suplier_id);
   }
 
-  handleSupplierSelect(event){
+  handleSupplierSelect(event, data){
     this.setState({
       selected_supplier: event.target.innerText,
-    })
+      selected_suplier_id: data.value
+    });
+    this.getProducts(data.value);
+  }
+
+  //Service Calls
+  getSuppliers(){
+      let supplier_options_json = new Array();
+      let promise = this._supplierService.getSupplier();
+      promise.then(function (response){
+        {_.map(response.data, ({ supplier_id, supplier_name }) => (
+          supplier_options_json.push({ key: supplier_id, text: supplier_name, value: supplier_id })
+        ))};
+        this.setState({
+          supplierData: supplier_options_json
+        });
+      }.bind(this));
+  }
+
+  getProducts(supplier_id){
+      let promise = this._productService.getProducts(supplier_id);
+      promise.then(function (response){
+        this.setState({
+          productData: response.data
+        });
+      }.bind(this));
   }
 
   render() {
-    const { column, data, direction, selected_supplier } = this.state
+    const { column, productData, supplierData, direction, selected_supplier} = this.state
 
     return (
     <div> 
     <ProductModal ref="productModal"/>
-    <Dropdown placeholder={selected_supplier} search selection options={suppliers} onChange={(e) => this.handleSupplierSelect(e)} />
+    <Dropdown placeholder={selected_supplier} search selection options={supplierData} onChange={(e, data) => this.handleSupplierSelect(e, data)} />
     <Table sortable celled selectable>
     <Table.Header>
           <Table.Row>
@@ -84,7 +108,7 @@ export class ProductTable extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {_.map(data, ({ product_id, product_number, product_name, product_type, product_price }) => (
+          {_.map(productData, ({ product_id, product_number, product_name, product_type, product_price }) => (
             <Table.Row key={product_id} onClick={this.handleRowClick( { product_id, product_number, product_name, product_type, product_price, } )}>
               <Table.Cell>{product_number}</Table.Cell>
               <Table.Cell>{product_name}</Table.Cell>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 const URL = "http://139.59.249.187:8080/order-management";
 
-export default class purchaseOrderService {
+export default class PurchaseOrderService {
 	//GET REQUEST
 	getPurchaseOrder(po_number){
 		axios.get(URL + '/po', {
