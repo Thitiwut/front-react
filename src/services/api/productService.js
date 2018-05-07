@@ -6,7 +6,7 @@ const config = {
 	headers: {
             'Content-Type': 'application/json',
     }
-}
+};
 
 export class ProductService {
 	//GET REQUEST

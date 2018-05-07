@@ -1,17 +1,21 @@
 import axios from 'axios';
+import {connect} from 'react-redux';
 const URL = "http://139.59.249.187:8080/order-management";
 
-export default class PurchaseOrderService {
+const config = {
+	headers: {
+            'Content-Type': 'application/json',
+    }
+};
+
+export class PurchaseOrderService {
 	//GET REQUEST
 	getPurchaseOrder(po_number){
-		axios.get(URL + '/po', {
+		return axios.get(URL + '/po', {
 			params: {
 				action: 'get_purchase_order',
 				po_number: po_number
 			}
-		})
-		.then(function (response) {
-			return response;
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -19,37 +23,39 @@ export default class PurchaseOrderService {
 	}
 
 	//POST REQUEST
-	newPurchaseOrder(supplier_id, branch_id, order_date, delivery_date, status){
-		axios.post(URL + '/po', {
+	newPurchaseOrder(po_number, supplier_id, branch_id, order_date, delivery_date, status){
+		return axios.post(URL + '/po', {
 			action: 'new_purchase_order',
+			po_number: po_number,
 			supplier_id: supplier_id,
 			branch_id: branch_id,
 			order_date: order_date,
 			delivery_date: delivery_date,
 			status: status
-		})
-		.then(function (response) {
-			return response;
-		})
+		}, config
+		)
 		.catch(function (error) {
 			console.log(error);
 		});
 	}
 
-	addPurchaseOrderProduct(product_id, po_id, order_amount, order_price){
-		axios.post(URL + '/po', {
-			action: 'add_purchase_order_product',
-			product_id: product_id,
-			po_id: po_id,
-			order_amount: order_amount,
-			order_price: order_price
-		})
-		.then(function (response) {
-			return response;
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
+	addPurchaseOrderProduct(POProducts, po_id){
+		let concurrent_request = [];
+		POProducts.forEach(function(product){
+				axios.post(URL + '/po', {
+					action: 'add_purchase_order_product',
+					product_id: +product.product_id,
+					po_id: +po_id,
+					order_amount: +product.amount,
+					order_price: parseFloat(+product.price)
+				}, config
+				).then(function (response) {
+					concurrent_request.push(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			})
+			return concurrent_request;
 	}
 
 	cancelPurchaseOrder(po_id){
@@ -99,3 +105,6 @@ export default class PurchaseOrderService {
 		});
 	}
 }
+
+export default connect(
+)(PurchaseOrderService);

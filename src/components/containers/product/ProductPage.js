@@ -5,8 +5,6 @@ import { ProductTable } from './ProductTable';
 
 export class ProductPage extends React.Component {
 
-  
-  
   render() {
     return (
       <div>

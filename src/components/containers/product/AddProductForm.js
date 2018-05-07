@@ -26,17 +26,13 @@ export class AddProductForm extends React.Component {
     this.getSuppliers();
   }
 
-  handleInputChange(event, data) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
+  handleInputChange(data) {
     this.setState({
       [data.name]: data.value
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit() {
     this.addProduct();
   }
 
