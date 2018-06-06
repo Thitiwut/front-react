@@ -29,6 +29,7 @@ export class PurchaseOrderPage extends React.Component {
           </NavLink>
       </Menu>
       <Switch>
+          <Route path="/po" component={SearchPurchaseOrder} />
           <Route path="/po/searchpo" component={SearchPurchaseOrder} />
           <Route path="/po/addpo" component={NewPurchaseOrder} />
           <Route path="/po/delivery" component={DeliveryPurchaseOrder} />
