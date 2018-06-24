@@ -5,10 +5,12 @@ import { Switch, NavLink, Route } from "react-router-dom";
 import { NewPurchaseOrder } from './NewPurchaseOrder';
 import { SearchPurchaseOrder } from './SearchPurchaseOrder';
 import { DeliveryPurchaseOrder } from './DeliveryPurchaseOrder';
+import { SearchPurchaseOrderDetail } from './SearchPurchaseOrderDetail';
+
 import { Menu, Segment } from 'semantic-ui-react'
 
 export class PurchaseOrderPage extends React.Component {
-  state = { activeItem: 'ค้นหาใบสั่งซื้อ' }
+  state = { activeItem: null }
 
   handlePanelClick = (e, { name }) => this.setState({ activeItem: name });
 
@@ -24,15 +26,12 @@ export class PurchaseOrderPage extends React.Component {
           <NavLink exact to="/po/addpo">
             <Menu.Item name='เพิ่มใบสั่งซื้อ' active={activeItem === 'เพิ่มใบสั่งซื้อ'} onClick={this.handlePanelClick} />
           </NavLink>
-          <NavLink exact to="/po/delivery">
-            <Menu.Item name='จัดการการส่ง' active={activeItem === 'จัดการการส่ง'} onClick={this.handlePanelClick} />
-          </NavLink>
       </Menu>
       <Switch>
-          <Route path="/po" component={SearchPurchaseOrder} />
           <Route path="/po/searchpo" component={SearchPurchaseOrder} />
           <Route path="/po/addpo" component={NewPurchaseOrder} />
           <Route path="/po/delivery" component={DeliveryPurchaseOrder} />
+          <Route path="/po/detail/:number"  component={SearchPurchaseOrderDetail} />} />
       </Switch>
       </div>
     );

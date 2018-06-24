@@ -1,23 +1,59 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Switch, NavLink, Route } from "react-router-dom";
-import { Dropdown, Button, Icon, Label, Form, Table, Input, Search, Grid, Header } from 'semantic-ui-react';
+import { Dropdown, Button, Icon, Label, Form, Table, Input, Search, Grid, Header, options, Breadcrumb } from 'semantic-ui-react';
 import moment from 'moment';
 
+import { SearchPurchaseOrderTable } from './SearchPurchaseOrderTable';
+
 import { PurchaseOrderService } from '../../../services/api/PurchaseOrderService';
+import { SupplierService } from '../../../services/api/SupplierService';
+import { BranchService } from '../../../services/api/BranchService';
+
+const delivery_options = [
+  { key: 'n/a', text: '-', value: 0 },
+  { key: 's', text: 'ยกเลิก', value: 's', label: { color: 'red', empty: true, circular: true } },
+  { key: 'm', text: 'รอการจัดส่ง', value: 'm', label: { color: 'blue', empty: true, circular: true } },
+  { key: 'l', text: 'จัดส่งแล้ว', value: 'l', label: { color: 'black', empty: true, circular: true } },
+]
+
+const MOCK_PODetail = [
+  {
+    po_number: "11114", supplier: "สมศรี", order_date: "10/10/2018", delivery_date: "11/10/2018", branch: "901", status: "ยกเลิก"
+    , POProduct: []
+  },
+  {
+    po_number: "11115", supplier: "สมศรี", order_date: "12/10/2018", delivery_date: "11/10/2018", branch: "902", status: "ยกเลิก"
+    , POProduct: []
+  }
+]
 
 export class SearchPurchaseOrder extends React.Component {
 
   constructor(props) {
     super(props);
     this._purchaseOrderService = new PurchaseOrderService();
+    this._supplierService = new SupplierService();
+    this._branchService = new BranchService();
     this.state = {
-      PODetail: {po_number: "-", supplier: "-", order_date: "-", delivery_date: "-", branch: "-", status: "-"},
+      supplierData: [],
+      branch_selection: [],
+      PODetailList: MOCK_PODetail,
+      PODetail: { po_number: "-", supplier: "-", order_date: "-", delivery_date: "-", branch: "-", status: "-" },
       POProduct: [],
       searchState: false,
+      searchType: 0,
       //
-      po_number_input: null,
+      search_po: null,
+      search_sup: null,
+      search_branch: null
     };
+  }
+
+
+  componentDidMount() {
+    this.getSuppliers();
+    this.getBranch();
   }
 
   handleInputChange(event, data) {
@@ -30,23 +66,55 @@ export class SearchPurchaseOrder extends React.Component {
     });
   }
 
-  handlePOSearch(){
+  handlePOSearch() {
     this.setState({
       searchState: !this.state.searchState,
     });
-    let promise = this._purchaseOrderService.getPurchaseOrder(this.state.po_number_input);
-    promise.then(function (response){
+    // let promise = this._purchaseOrderService.getPurchaseOrder(this.state.po_number_input);
+    promise.then(function (response) {
       this.setState({
-        POProduct: response.data.po_product,
-        PODetail: {
-          po_number: response.data.po_number, 
-          supplier: response.data.supplier_name, 
-          order_date: moment(response.data.order_date).format('DD/MM/YYYY'), 
-          delivery_date: moment(response.data.expect_delivery_date).format('DD/MM/YYYY'), 
-          branch: response.data.customer_branch_name, 
-          status: response.data.status
-        },
+        // POProduct: response.data.po_product,
+        // PODetail: {
+        //   po_number: response.data.po_number,
+        //   supplier: response.data.supplier_name,
+        //   order_date: moment(response.data.order_date).format('DD/MM/YYYY'),
+        //   delivery_date: moment(response.data.expect_delivery_date).format('DD/MM/YYYY'),
+        //   branch: response.data.customer_branch_name,
+        //   status: response.data.status
+        // },
         searchState: !this.state.searchState,
+      });
+    }.bind(this));
+  }
+
+  getSuppliers() {
+    let supplier_options_json = new Array();
+    supplier_options_json.push({ key: "n/a", text: "-", value: 0 })
+    let promise = this._supplierService.getSupplier();
+    promise.then(function (response) {
+      {
+        _.map(response.data, ({ supplier_id, supplier_name }) => (
+          supplier_options_json.push({ key: supplier_id, text: supplier_name, value: supplier_id })
+        ))
+      };
+      this.setState({
+        supplierData: supplier_options_json
+      });
+    }.bind(this));
+  }
+
+  getBranch() {
+    let branch_options_json = new Array();
+    branch_options_json.push({ key: "n/a", text: "-", value: 0 });
+    let promise = this._branchService.getBranch();
+    promise.then(function (response) {
+      {
+        _.map(response.data, ({ branch_id, branch_name, branch_number }) => (
+          branch_options_json.push({ key: branch_number, text: (branch_name + ' : ' + branch_number), value: branch_id })
+        ))
+      };
+      this.setState({
+        branch_selection: branch_options_json
       });
     }.bind(this));
   }
@@ -54,83 +122,32 @@ export class SearchPurchaseOrder extends React.Component {
   render() {
     return (
       <div>
-        <Form class="ui form" onSubmit={(e) => this.handlePOSearch(e)}>
-          <Input focus loading={this.state.searchState} icon='search' iconPosition='left' placeholder='ค้นหาด้วยเลข PO' name="po_number_input" onChange={(e,d) => this.handleInputChange(e,d)}/>
-        </Form>
-              <Table celled>
-      <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell >
-              เลขที่ PO
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              Supplier
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              วันที่สั่งซื้อ
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              วันที่ส่งของ
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              สาขาที่ส่ง
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-            <Table.Row>
-              <Table.Cell>{this.state.PODetail.po_number}</Table.Cell>
-              <Table.Cell>{this.state.PODetail.supplier}</Table.Cell>
-              <Table.Cell>{this.state.PODetail.order_date}</Table.Cell>
-              <Table.Cell>{this.state.PODetail.delivery_date}</Table.Cell>
-              <Table.Cell>{this.state.PODetail.branch}</Table.Cell>
-            </Table.Row>
-        </Table.Body>
-      </Table>
-      <Table celled>
-      <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell >
-              สินค้า
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              รหัสสินค้า
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              จำนวน
-            </Table.HeaderCell>
-            <Table.HeaderCell >
-              ราคา
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-        {_.map(this.state.POProduct, ({ product_id, product_name, product_number, order_amount, product_price }) => (
-            <Table.Row key={product_id} >
-              <Table.Cell>{product_name}</Table.Cell>
-              <Table.Cell>{product_number}</Table.Cell>
-              <Table.Cell>{order_amount}</Table.Cell>
-              <Table.Cell>{product_price}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-      <Button as='div' labelPosition='right'>
-      <Button basic color='blue'>
-        <Icon name='archive' />
-        สถานะการส่่ง
-      </Button>
-      <Label as='a' basic color='blue' pointing='left'>{this.state.PODetail.status}</Label>
-    </Button>
-      {/* <Dropdown text='อัพเดต' floating labeled button className='icon'>
-      <Dropdown.Menu>
-      <Dropdown.Header icon='tags' content='เปลี่ยนแปลงสถานะการจัดส่ง' />
-      <Dropdown.Divider />
-      <Dropdown.Item label={{ color: 'red', empty: true, circular: true }} text='ยกเลิก' />
-      <Dropdown.Item label={{ color: 'blue', empty: true, circular: true }} text='รอการจัดส่ง' />
-      <Dropdown.Item label={{ color: 'black', empty: true, circular: true }} text='จัดส่งแล้ว' />
-      </Dropdown.Menu>
-      </Dropdown> */}
+        <div>
+          <Breadcrumb>
+            <Breadcrumb.Section active>ค้นหา</Breadcrumb.Section>
+            <Breadcrumb.Divider icon='right angle' />
+            <Breadcrumb.Section >ข้อมูลใบสั่งซื้อ</Breadcrumb.Section>
+          </Breadcrumb>
+          <Form style={{ margin: '2em 0' }} loading={this.state.searchState} onSubmit={(e) => this.handlePOSearch(e)}>
+            <Form.Group>
+              <Form.Input label='เลข PO' placeholder='-' name='search_po' onChange={(e, d) => this.handleInputChange(e, d)} />
+              <Form.Select label='สถานะ' options={delivery_options} placeholder='-' name='search_stat' onChange={(e, d) => this.handleInputChange(e, d)} />
+              <Form.Select label='Supplier' options={this.state.supplierData} placeholder='-' name='search_sup' onChange={(e, d) => this.handleInputChange(e, d)} />
+              <Form.Select label='สาขา' options={this.state.branch_selection} placeholder='-' name='search_branch' onChange={(e, d) => this.handleInputChange(e, d)} />
+              <Button animated>
+                <Button.Content visible>ค้นหา</Button.Content>
+                <Button.Content hidden>
+                  <Icon name='search' />
+                </Button.Content>
+              </Button>
+            </Form.Group>
+          </Form>
+        </div>
+        <div style={{ margin: '1em 0' }}>
+          <Switch>
+            <Route path="/po/searchpo" render={(props) => <SearchPurchaseOrderTable {...props} PODetailList={this.state.PODetailList} />} />
+          </Switch>
+        </div>
       </div>
     );
   }

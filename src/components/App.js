@@ -25,7 +25,7 @@ class App extends React.Component {
               active={activeItem === "home"}
               onClick={this.handleItemClick}
             >
-              Home
+              หน้าหลัก
             </Menu.Item>{" "}
           </NavLink>
           <NavLink to="/po">
@@ -34,7 +34,7 @@ class App extends React.Component {
               active={activeItem === "po"}
               onClick={this.handleItemClick}
             >
-              Purchase Order
+              ใบสั่งซื้อ
             </Menu.Item>
           </NavLink>
           <NavLink to="/product">
@@ -43,7 +43,7 @@ class App extends React.Component {
               active={activeItem === "product"}
               onClick={this.handleItemClick}
             >
-              Product
+              สินค้า
             </Menu.Item>
           </NavLink>
 
