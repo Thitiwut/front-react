@@ -70,7 +70,7 @@ export class ProductModal extends React.Component {
   //Service Calls
   handlePricing(){
     let promise = this._productService.setProductPrice(
-      this.state.product_id, this.state.supplier_id, this.state.date.format("YYYYMMDD"), parseFloat((parseFloat(this.state.new_price)).toFixed(2))
+      this.state.product_id, this.state.supplier_id, this.state.date.format("YYYYMMDD"), parseFloat(this.state.new_price).toFixed(2)
       );
     promise.then(function (response) {
       console.log(response.data);

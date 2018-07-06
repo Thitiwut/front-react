@@ -157,6 +157,7 @@ export class NewPurchaseOrder extends React.Component {
       if(inserted_po_id != null){
         let response = this._purchaseOrderService.addPurchaseOrderProduct(this.state.POProduct, inserted_po_id);
         console.log(response);
+        alert("ใบสั่งซื้อถูกเพิ่ม สำเร็จ!");
       }
     }.bind(this));
   }
