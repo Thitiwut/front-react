@@ -26,7 +26,7 @@ export class AddProductForm extends React.Component {
     this.getSuppliers();
   }
 
-  handleInputChange(data) {
+  handleInputChange(event, data) {
     this.setState({
       [data.name]: data.value
     });
