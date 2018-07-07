@@ -47,7 +47,7 @@ export class PurchaseOrderService {
 					product_id: +product.product_id,
 					po_id: +po_id,
 					order_amount: +product.amount,
-					order_price: parseFloat(+product.price)
+					order_price: parseFloat(product.price).toFixed(2)
 				}, config
 				).then(function (response) {
 					concurrent_request.push(response);
