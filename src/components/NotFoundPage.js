@@ -5,9 +5,9 @@ const NotFoundPage = () => {
   return (
     <div>
       <h4>
-        404 Page Not Found
+        ไม่มีหน้านี้ในระบบ โปรดคลิกด้านล่างเพื่อกลับไปยังหน้าหลัก
       </h4>
-      <Link to="/"> Go back to homepage </Link>
+      <Link to="/"> กลับหน้าหลัก </Link>
     </div>
   );
 };

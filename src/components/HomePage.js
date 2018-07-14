@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "semantic-ui-react";
+import { Button, Feed, Icon, Divider } from "semantic-ui-react";
+import { Dashboard } from './Dashboard';
 
 const HomePage = () => {
   return (
     <div>
-      <h1>Order Management</h1>
-
+      <Dashboard/>
       <ol>
       </ol>
     </div>
