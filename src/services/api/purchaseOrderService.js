@@ -22,6 +22,18 @@ export class PurchaseOrderService {
 		});
 	}
 
+	getFilteredPurchaseOrder(po_number){
+		return axios.get(URL + '/po', {
+			params: {
+				action: 'get_purchase_order',
+				po_number: po_number
+			}
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	}
+
 	//POST REQUEST
 	newPurchaseOrder(po_number, supplier_id, branch_id, order_date, delivery_date, status){
 		return axios.post(URL + '/po', {
