@@ -49,7 +49,7 @@ export class NewPurchaseOrder extends React.Component {
 
   handleConfirmAddingPO(){
     if(this.state.PODetail.po_number == "-" || this.state.POProduct.length == 0 ){
-      alert("ใบสั่งซื้อไม่สมบูรณ์");
+      alert("ใบสั่งซื้อยังไม่สมบูรณ์");
     }else{
       this.addNewPurchaseOrder();
     }
@@ -308,7 +308,7 @@ export class NewPurchaseOrder extends React.Component {
           ))}
         </Table.Body>
       </Table>
-      <Button primary onClick={this.handleConfirmAddingPO.bind(this)}>ยืนยัน</Button>
+      <Button primary onClick={this.handleConfirmAddingPO.bind(this)}>เพิ่มใบสั่งซื้อ</Button>
       </div>
     );
   }
