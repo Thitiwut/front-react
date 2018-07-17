@@ -232,7 +232,7 @@ export class NewPurchaseOrder extends React.Component {
           </Form.Group>
         </div>
         <div class="field">
-        <Form.Button role="button" >เพิ่มรายการ</Form.Button>
+        <Form.Button role="button" >เพิ่มข้อมูลใบสั่งซื้อ</Form.Button>
         </div><br></br>
       </Form>
       <Form class="ui form" onSubmit={(e) => this.handleSubmitProduct(e)}>

@@ -23,10 +23,18 @@ class App extends React.Component {
     isAuthenticated: false
   };
 
-  authenticate(){
+  authenticate() {
     this.setState({
       isAuthenticated: true
     });
+  }
+
+  logout(){
+    console.log("LOGGING OUT");
+    this.setState({
+      isAuthenticated: false
+    });
+    this.forceUpdate();
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -64,7 +72,14 @@ class App extends React.Component {
                 สินค้า
             </Menu.Item>
             </NavLink>
-
+            <Menu.Menu position='right'>
+            <Menu.Item header>สาขา:  {localStorage.getItem("branch_name")}</Menu.Item>
+            <Menu.Item
+              name='ออกจากระบบ'
+              active={activeItem === 'logout'}
+              onClick={this.logout.bind(this)}
+            />
+            </Menu.Menu>
           </Menu>
           <Switch>
             <Route exact path="/" component={HomePage} />
@@ -73,14 +88,14 @@ class App extends React.Component {
             <Route path="/login" component={LoginPage} />
             <Route component={NotFoundPage} />
           </Switch>
-        </div>
+        </div >
       );
     } else {
       return (
         <div>
           <Redirect to='/login' />
           <Switch>
-            <Route exact path="/login" render={ () =>  <LoginPage authenticate={this.authenticate}/> }/>
+            <Route exact path="/login" render={() => <LoginPage authenticate={this.authenticate} />} />
             <Route component={NotFoundPage} />
           </Switch>
         </div>
