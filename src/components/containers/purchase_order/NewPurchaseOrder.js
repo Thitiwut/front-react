@@ -10,6 +10,7 @@ import { ProductService } from '../../../services/api/ProductService';
 import { SupplierService } from '../../../services/api/SupplierService';
 import { BranchService } from '../../../services/api/BranchService';
 import { PurchaseOrderService } from '../../../services/api/PurchaseOrderService';
+import { FeedService } from '../../../services/api/FeedService';
 
 export class NewPurchaseOrder extends React.Component {
 
@@ -19,6 +20,7 @@ export class NewPurchaseOrder extends React.Component {
     this._supplierService = new SupplierService();
     this._branchService = new BranchService();
     this._purchaseOrderService = new PurchaseOrderService();
+    this._feedService = new FeedService();
     this.state = {
       PODetail: {date: "-", po_number: "-", supplier: "-", order_date: "-", delivery_date: "-", branch: "-"},
       POProduct: [],
@@ -159,7 +161,10 @@ export class NewPurchaseOrder extends React.Component {
         console.log(response);
         alert("ใบสั่งซื้อถูกเพิ่ม สำเร็จ!");
       }
-    }.bind(this));
+    }.bind(this))
+    .then( () => {
+      this._feedService.addFeed("po_added", this.state.delivery_branch_number+'.'+this.state.po_number, "", "");
+    });
   }
 
   getSuppliers(){

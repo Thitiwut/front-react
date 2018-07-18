@@ -90,6 +90,8 @@ export class Dashboard extends React.Component {
         .replace("year","ปี")
         .replace("month", "เดือน")
         .replace("months", "เดือน")
+        .replace("hours", "ชั่วโมง")
+        .replace("hour", "ชั่วโมง")
         .replace("minutes", "นาที")
         .replace("minute", "นาที")
         .replace("seconds", "วินาที")

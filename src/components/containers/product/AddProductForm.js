@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import { Form } from 'semantic-ui-react';
 import { ProductService } from '../../../services/api/ProductService';
 import { SupplierService } from '../../../services/api/SupplierService';
+import { FeedService } from '../../../services/api/FeedService';
 
 const productType = [
   { key: '1', text: 'regular', value: 'regular' }
@@ -14,6 +15,7 @@ export class AddProductForm extends React.Component {
     super(props);
     this._productService = new ProductService();
     this._supplierService = new SupplierService();
+    this._feedService = new FeedService();
     this.state = {
       supplier: 0,
       product_name: "",
@@ -58,7 +60,13 @@ export class AddProductForm extends React.Component {
     promise.then(function (response) {
       console.log(response.data);
       alert("Product Added !");
-    }.bind(this));
+    }.bind(this))
+    .then( () => {
+      let adding_supplier = this.state.supplierData.find((supplier) => {
+        return supplier.value === this.state.supplier;
+      });
+      this._feedService.addFeed("product_added", "", this.state.product_name, adding_supplier.text);
+    });
   }
 
   render() {
