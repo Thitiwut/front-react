@@ -83,6 +83,7 @@ export class Dashboard extends React.Component {
     feed.forEach((item) => {
       if (item.action != "alert") {
         item.date = item.date.replace("days","วัน")
+        .replace("day", "วัน")
         .replace("ago","ก่อน")
         .replace("weeks","อาทิตย์")
         .replace("years","ปี")

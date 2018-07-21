@@ -32,8 +32,8 @@ export class SearchPurchaseOrderTable extends React.Component {
     }
 
     handleRowClick = po_number => () => {
-        console.log(po_number);
-        this.props.history.push('/po/detail/'+po_number);
+        let po_trim = po_number.split('.');
+        this.props.history.push('/po/detail/'+po_trim[1]);
     }
 
     render() {
@@ -60,13 +60,13 @@ export class SearchPurchaseOrderTable extends React.Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {_.map(this.props.PODetailList, ({ po_number, supplier, branch, status }, index) => (
+                        {_.map(this.props.PODetailList, ({ po_number, supplier_name, customer_branch_name, status }, index) => (
                             <Table.Row key={po_number} onClick={this.handleRowClick(po_number)}>
                                 <Table.Cell>{index + 1}</Table.Cell>
                                 <Table.Cell>{po_number}</Table.Cell>
                                 <Table.Cell>{status}</Table.Cell>
-                                <Table.Cell>{supplier}</Table.Cell>
-                                <Table.Cell>{branch}</Table.Cell>
+                                <Table.Cell>{supplier_name}</Table.Cell>
+                                <Table.Cell>{customer_branch_name}</Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>

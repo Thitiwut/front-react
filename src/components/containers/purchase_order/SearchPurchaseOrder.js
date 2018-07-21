@@ -11,21 +11,10 @@ import { SupplierService } from '../../../services/api/SupplierService';
 import { BranchService } from '../../../services/api/BranchService';
 
 const delivery_options = [
-  { key: 'n/a', text: '-', value: 0 },
-  { key: 's', text: 'ยกเลิก', value: 's', label: { color: 'red', empty: true, circular: true } },
-  { key: 'm', text: 'รอการจัดส่ง', value: 'm', label: { color: 'blue', empty: true, circular: true } },
-  { key: 'l', text: 'จัดส่งแล้ว', value: 'l', label: { color: 'black', empty: true, circular: true } },
-]
-
-const MOCK_PODetail = [
-  {
-    po_number: "11114", supplier: "สมศรี", order_date: "10/10/2018", delivery_date: "11/10/2018", branch: "901", status: "ยกเลิก"
-    , POProduct: []
-  },
-  {
-    po_number: "11115", supplier: "สมศรี", order_date: "12/10/2018", delivery_date: "11/10/2018", branch: "902", status: "ยกเลิก"
-    , POProduct: []
-  }
+  { key: 'n/a', text: '', value: '' },
+  { key: 's', text: 'ยกเลิก', value: 'ยกเลิก', label: { color: 'red', empty: true, circular: true } },
+  { key: 'm', text: 'รอการจัดส่ง', value: 'รอการจัดส่ง', label: { color: 'blue', empty: true, circular: true } },
+  { key: 'l', text: 'จัดส่งแล้ว', value: 'จัดส่งแล้ว', label: { color: 'black', empty: true, circular: true } },
 ]
 
 export class SearchPurchaseOrder extends React.Component {
@@ -38,15 +27,14 @@ export class SearchPurchaseOrder extends React.Component {
     this.state = {
       supplierData: [],
       branch_selection: [],
-      PODetailList: MOCK_PODetail,
-      PODetail: { po_number: "-", supplier: "-", order_date: "-", delivery_date: "-", branch: "-", status: "-" },
-      POProduct: [],
+      PODetailList: [],
       searchState: false,
       searchType: 0,
       //
-      search_po: null,
-      search_sup: null,
-      search_branch: null
+      search_po: '',
+      search_sup: '',
+      search_branch: '',
+      search_stat: '',
     };
   }
 
@@ -64,24 +52,41 @@ export class SearchPurchaseOrder extends React.Component {
     this.setState({
       [data.name]: data.value
     });
+
+    if(data.name == "search_sup"){
+      let targetSupplier = this.state.supplierData.filter(function( supplier ) {
+        return supplier.value == data.value;
+      });
+    
+
+      this.setState({
+        search_sup: targetSupplier[0].text
+      });
+    }
+
+    if(data.name == "search_branch"){
+      let targetBranch = this.state.branch_selection.filter(function( branch ) {
+        return branch.value == data.value;
+      });
+    
+
+      this.setState({
+        search_branch: targetBranch[0].text
+      });
+    }
   }
 
   handlePOSearch() {
     this.setState({
       searchState: !this.state.searchState,
+      PODetailList: [],
     });
-    // let promise = this._purchaseOrderService.getPurchaseOrder(this.state.po_number_input);
+     let promise = this._purchaseOrderService.getPurchaseOrderList(
+      this.state.search_po, this.state.search_stat, this.state.search_sup, this.state.search_branch
+     );
     promise.then(function (response) {
       this.setState({
-        // POProduct: response.data.po_product,
-        // PODetail: {
-        //   po_number: response.data.po_number,
-        //   supplier: response.data.supplier_name,
-        //   order_date: moment(response.data.order_date).format('DD/MM/YYYY'),
-        //   delivery_date: moment(response.data.expect_delivery_date).format('DD/MM/YYYY'),
-        //   branch: response.data.customer_branch_name,
-        //   status: response.data.status
-        // },
+        PODetailList: response.data,
         searchState: !this.state.searchState,
       });
     }.bind(this));
@@ -89,7 +94,7 @@ export class SearchPurchaseOrder extends React.Component {
 
   getSuppliers() {
     let supplier_options_json = new Array();
-    supplier_options_json.push({ key: "n/a", text: "-", value: 0 })
+    supplier_options_json.push({ key: "n/a", text: "", value: '' })
     let promise = this._supplierService.getSupplier();
     promise.then(function (response) {
       {
@@ -105,12 +110,12 @@ export class SearchPurchaseOrder extends React.Component {
 
   getBranch() {
     let branch_options_json = new Array();
-    branch_options_json.push({ key: "n/a", text: "-", value: 0 });
+    branch_options_json.push({ key: "n/a", text: "", value: '' });
     let promise = this._branchService.getBranch();
     promise.then(function (response) {
       {
         _.map(response.data, ({ branch_id, branch_name, branch_number }) => (
-          branch_options_json.push({ key: branch_number, text: (branch_name + ' : ' + branch_number), value: branch_id })
+          branch_options_json.push({ key: branch_number, text: branch_name, value: branch_id })
         ))
       };
       this.setState({

@@ -84,6 +84,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route path="/po" component={PurchaseOrderPage} />
+            <Route path="/po/detail/:po_number" component={PurchaseOrderPage} />
             <Route path="/product" component={ProductPage} />
             <Route path="/login" component={LoginPage} />
             <Route component={NotFoundPage} />

@@ -22,6 +22,22 @@ export class PurchaseOrderService {
 		});
 	}
 
+	getPurchaseOrderList(po_number, status, supplier_name, branch_name){
+		return axios.get(URL + '/po', {
+			params: {
+				action: 'get_purchase_order_list',
+				po_number: po_number,
+				status: status,
+				supplier_name: supplier_name,
+				branch_name: branch_name
+			}
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	}
+
+
 	getFilteredPurchaseOrder(po_number){
 		return axios.get(URL + '/po', {
 			params: {
