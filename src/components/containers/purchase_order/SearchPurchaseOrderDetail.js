@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Breadcrumb, Menu, Segment, Dropdown, Button, Icon, Label, Form, Table, Input, Search, Grid, Header, Select } from 'semantic-ui-react';
 
 import { PurchaseOrderService } from '../../../services/api/PurchaseOrderService';
+import { FeedService } from '../../../services/api/FeedService';
 
 
 export class SearchPurchaseOrderDetail extends React.Component {
@@ -12,6 +13,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
     constructor(props) {
         super(props);
         this._purchaseOrderService = new PurchaseOrderService();
+        this._feedService = new FeedService();
         this.state = {
             current_po: null,
             POData: {}
@@ -24,7 +26,22 @@ export class SearchPurchaseOrderDetail extends React.Component {
             current_po: this.props.match.params.number
         });
         this.getPO();
-      }
+    }
+
+    handleStatusClick(e, data) {
+        let promise = this._purchaseOrderService.updateStatus(this.state.POData.po_id, data.value);
+        promise.then(function (response) {
+            alert("อัพเดตสถานะของใบสั่งซื้อเป็น "+ data.value +" แล้ว !");
+            this.getPO();
+        }.bind(this))
+        .then( () => {
+            if(data.value === 'จัดส่งแล้ว'){
+                this._feedService.addFeed("po_delivered", this.state.POData.po_number, "", "");
+            }else if(data.value === 'ยกเลิก'){
+                this._feedService.addFeed("po_cancel", this.state.POData.po_number, "", "");
+            }
+        });
+    }
 
     getPO() {
         let promise = this._purchaseOrderService.getPurchaseOrder(this.props.match.params.number);
@@ -33,10 +50,6 @@ export class SearchPurchaseOrderDetail extends React.Component {
                 POData: response.data
             });
         }.bind(this));
-    }
-
-    updatePOStatus(){
-        
     }
 
     render() {
@@ -112,13 +125,13 @@ export class SearchPurchaseOrderDetail extends React.Component {
       </Button>
                     <Label as='a' basic color='blue' pointing='left'>{this.state.POData.status}</Label>
                 </Button>
-                <Dropdown text='ปรับสถานะ' floating labeled button className='icon'>
+                <Dropdown text='ปรับสถานะ' floating labeled button className='icon' >
                     <Dropdown.Menu>
                         <Dropdown.Header icon='tags' content='เปลี่ยนแปลงสถานะการจัดส่ง' />
                         <Dropdown.Divider />
-                        <Dropdown.Item label={{ color: 'red', empty: true, circular: true }} text='ยกเลิก' />
-                        <Dropdown.Item label={{ color: 'blue', empty: true, circular: true }} text='รอการจัดส่ง' />
-                        <Dropdown.Item label={{ color: 'black', empty: true, circular: true }} text='จัดส่งแล้ว' />
+                        <Dropdown.Item label={{ color: 'red', empty: true, circular: true }} text='ยกเลิก' value='ยกเลิก' onClick={(e,d) => this.handleStatusClick(e,d)}/>
+                        <Dropdown.Item label={{ color: 'blue', empty: true, circular: true }} text='รอการจัดส่ง'  value='รอการจัดส่ง' onClick={(e,d) => this.handleStatusClick(e,d)}/>
+                        <Dropdown.Item label={{ color: 'black', empty: true, circular: true }} text='จัดส่งแล้ว' value='จัดส่งแล้ว' onClick={(e,d) => this.handleStatusClick(e,d)}/>
                     </Dropdown.Menu>
                 </Dropdown>
 

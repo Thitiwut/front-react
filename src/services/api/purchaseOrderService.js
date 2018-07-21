@@ -132,6 +132,18 @@ export class PurchaseOrderService {
 			console.log(error);
 		});
 	}
+
+	updateStatus(po_id, status){
+		return axios.post(URL + '/po', {
+			action: 'update_status',
+			po_id: po_id,
+			status: status
+		}, config
+		)
+		.catch(function (error) {
+			console.log(error);
+		});
+	}
 }
 
 export default connect(

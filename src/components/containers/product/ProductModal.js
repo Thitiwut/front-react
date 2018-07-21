@@ -74,7 +74,7 @@ export class ProductModal extends React.Component {
       );
     promise.then(function (response) {
       console.log(response.data);
-      alert("Pricing Adjusted !");
+      alert("ปรับราคาใช้แล้ว !");
     }.bind(this));
   }
 
@@ -84,7 +84,7 @@ export class ProductModal extends React.Component {
       );
     promise.then(function (response) {
       console.log(response.data);
-      alert("Product Name Edited !");
+      alert("ชื่อสินค้าถูกแก้ไขแล้ว !");
     }.bind(this));
   }
 
