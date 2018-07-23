@@ -82,7 +82,7 @@ export class SearchPurchaseOrder extends React.Component {
       PODetailList: [],
     });
      let promise = this._purchaseOrderService.getPurchaseOrderList(
-      this.state.search_po, this.state.search_stat, this.state.search_sup, this.state.search_branch
+      this.state.search_po.trim(), this.state.search_stat, this.state.search_sup, this.state.search_branch
      );
     promise.then(function (response) {
       this.setState({

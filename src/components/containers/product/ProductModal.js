@@ -55,7 +55,9 @@ export class ProductModal extends React.Component {
     })
   }
 
-  handleClose = () => this.setState({ modalOpen: false }) 
+  handleClose = () => { 
+    this.setState({ modalOpen: false });
+  }
 
   handleInputChange(event, data) {
     const target = event.target;
@@ -74,13 +76,16 @@ export class ProductModal extends React.Component {
       );
     promise.then(function (response) {
       console.log(response.data);
+      this.setState({
+        product_price: this.state.new_price,
+      })
       alert("ปรับราคาใช้แล้ว !");
     }.bind(this));
   }
 
   handleEditProductName(){
     let promise = this._productService.editProduct(
-      this.state.product_id, this.state.product_name
+      this.state.product_id, this.state.product_name.trim()
       );
     promise.then(function (response) {
       console.log(response.data);

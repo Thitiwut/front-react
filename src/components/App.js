@@ -96,6 +96,7 @@ class App extends React.Component {
         <div>
           <Redirect to='/login' />
           <Switch>
+            <Route exact path="/" component={HomePage} />
             <Route exact path="/login" render={() => <LoginPage authenticate={this.authenticate} />} />
             <Route component={NotFoundPage} />
           </Switch>

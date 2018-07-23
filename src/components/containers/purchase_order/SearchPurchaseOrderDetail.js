@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Breadcrumb, Menu, Segment, Dropdown, Button, Icon, Label, Form, Table, Input, Search, Grid, Header, Select } from 'semantic-ui-react';
 
 import { PurchaseOrderService } from '../../../services/api/PurchaseOrderService';
+import { DownloadService } from '../../../services/api/DownloadService';
 import { FeedService } from '../../../services/api/FeedService';
 
 
@@ -14,6 +15,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
         super(props);
         this._purchaseOrderService = new PurchaseOrderService();
         this._feedService = new FeedService();
+        this._downloadService = new DownloadService();
         this.state = {
             current_po: null,
             POData: {}
@@ -31,16 +33,20 @@ export class SearchPurchaseOrderDetail extends React.Component {
     handleStatusClick(e, data) {
         let promise = this._purchaseOrderService.updateStatus(this.state.POData.po_id, data.value);
         promise.then(function (response) {
-            alert("อัพเดตสถานะของใบสั่งซื้อเป็น "+ data.value +" แล้ว !");
+            alert("อัพเดตสถานะของใบสั่งซื้อเป็น " + data.value + " แล้ว !");
             this.getPO();
         }.bind(this))
-        .then( () => {
-            if(data.value === 'จัดส่งแล้ว'){
-                this._feedService.addFeed("po_delivered", this.state.POData.po_number, "", "");
-            }else if(data.value === 'ยกเลิก'){
-                this._feedService.addFeed("po_cancel", this.state.POData.po_number, "", "");
-            }
-        });
+            .then(() => {
+                if (data.value === 'จัดส่งแล้ว') {
+                    this._feedService.addFeed("po_delivered", this.state.POData.po_number, "", "");
+                } else if (data.value === 'ยกเลิก') {
+                    this._feedService.addFeed("po_cancel", this.state.POData.po_number, "", "");
+                }
+            });
+    }
+
+    handleDownloadPOClick(e, data) {
+        let promise = this._downloadService.downloadPOPdf(this.props.match.params.number);
     }
 
     getPO() {
@@ -129,15 +135,14 @@ export class SearchPurchaseOrderDetail extends React.Component {
                     <Dropdown.Menu>
                         <Dropdown.Header icon='tags' content='เปลี่ยนแปลงสถานะการจัดส่ง' />
                         <Dropdown.Divider />
-                        <Dropdown.Item label={{ color: 'red', empty: true, circular: true }} text='ยกเลิก' value='ยกเลิก' onClick={(e,d) => this.handleStatusClick(e,d)}/>
-                        <Dropdown.Item label={{ color: 'blue', empty: true, circular: true }} text='รอการจัดส่ง'  value='รอการจัดส่ง' onClick={(e,d) => this.handleStatusClick(e,d)}/>
-                        <Dropdown.Item label={{ color: 'black', empty: true, circular: true }} text='จัดส่งแล้ว' value='จัดส่งแล้ว' onClick={(e,d) => this.handleStatusClick(e,d)}/>
+                        <Dropdown.Item label={{ color: 'red', empty: true, circular: true }} text='ยกเลิก' value='ยกเลิก' onClick={(e, d) => this.handleStatusClick(e, d)} />
+                        <Dropdown.Item label={{ color: 'blue', empty: true, circular: true }} text='รอการจัดส่ง' value='รอการจัดส่ง' onClick={(e, d) => this.handleStatusClick(e, d)} />
+                        <Dropdown.Item label={{ color: 'black', empty: true, circular: true }} text='จัดส่งแล้ว' value='จัดส่งแล้ว' onClick={(e, d) => this.handleStatusClick(e, d)} />
                     </Dropdown.Menu>
                 </Dropdown>
 
                 <Button.Group horizontal labeled icon>
-                    <Button icon='file outline' content='ปริ้นใบสั่งซื้อ' />
-                    <Button icon='file outline' content='ปริ้นใบคนชับ' />
+                    <Button icon='file outline' content='ดาวโหลดใบสั่งซื้อ' onClick={(e, d) => this.handleDownloadPOClick(e, d)} />
                 </Button.Group>
             </div>
         );

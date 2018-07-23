@@ -55,11 +55,11 @@ export class AddProductForm extends React.Component {
 
   addProduct(){
     let promise = this._productService.addProduct(
-      this.state.product_name, this.state.product_type, this.state.supplier
+      this.state.product_name.trim(), this.state.product_type, this.state.supplier
       );
     promise.then(function (response) {
       console.log(response.data);
-      alert("Product Added !");
+      alert("เพิ่มสินค้าสำเร็จ !");
     }.bind(this))
     .then( () => {
       let adding_supplier = this.state.supplierData.find((supplier) => {
