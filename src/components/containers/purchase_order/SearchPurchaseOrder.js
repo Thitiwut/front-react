@@ -53,22 +53,22 @@ export class SearchPurchaseOrder extends React.Component {
       [data.name]: data.value
     });
 
-    if(data.name == "search_sup"){
-      let targetSupplier = this.state.supplierData.filter(function( supplier ) {
+    if (data.name == "search_sup") {
+      let targetSupplier = this.state.supplierData.filter(function (supplier) {
         return supplier.value == data.value;
       });
-    
+
 
       this.setState({
         search_sup: targetSupplier[0].text
       });
     }
 
-    if(data.name == "search_branch"){
-      let targetBranch = this.state.branch_selection.filter(function( branch ) {
+    if (data.name == "search_branch") {
+      let targetBranch = this.state.branch_selection.filter(function (branch) {
         return branch.value == data.value;
       });
-    
+
 
       this.setState({
         search_branch: targetBranch[0].text
@@ -78,18 +78,28 @@ export class SearchPurchaseOrder extends React.Component {
 
   handlePOSearch() {
     this.setState({
-      searchState: !this.state.searchState,
-      PODetailList: [],
+      searchState: !this.state.searchState
     });
-     let promise = this._purchaseOrderService.getPurchaseOrderList(
+    let promise = this._purchaseOrderService.getPurchaseOrderList(
       this.state.search_po.trim(), this.state.search_stat, this.state.search_sup, this.state.search_branch
-     );
+    );
     promise.then(function (response) {
+      let POProductsChuckArray = this.slicePOProductsIntoChunks(response.data);
       this.setState({
-        PODetailList: response.data,
+        PODetailList: POProductsChuckArray,
         searchState: !this.state.searchState,
       });
     }.bind(this));
+  }
+
+  slicePOProductsIntoChunks(POProducts) {
+    let ChucksArray = [];
+    let i, j, tempArray, chunk = 10;
+    for (i = 0, j = POProducts.length; i < j; i += chunk) {
+      tempArray = POProducts.slice(i, i + chunk);
+      ChucksArray.push(tempArray);
+    }
+    return ChucksArray;
   }
 
   getSuppliers() {
@@ -150,7 +160,7 @@ export class SearchPurchaseOrder extends React.Component {
         </div>
         <div style={{ margin: '1em 0' }}>
           <Switch>
-            <Route path="/po/searchpo" render={(props) => <SearchPurchaseOrderTable {...props} PODetailList={this.state.PODetailList} />} />
+            <Route path="/po/searchpo" render={(props) => <SearchPurchaseOrderTable ref="searchPOTable" {...props} PODetailList={this.state.PODetailList} />} />
           </Switch>
         </div>
       </div>

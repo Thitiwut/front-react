@@ -3,13 +3,16 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { Table, Dropdown } from 'semantic-ui-react';
+import { Table, Dropdown, Menu, Icon, Pagination } from 'semantic-ui-react';
 
 export class SearchPurchaseOrderTable extends React.Component {
 
     constructor(props) {
         super(props);
-
+        this.state = {
+            activePage: 1,
+            POData: {}
+        };
     }
 
     handleSort = clickedColumn => () => {
@@ -31,18 +34,25 @@ export class SearchPurchaseOrderTable extends React.Component {
         // })
     }
 
+    handlePaginationChange = (e, { activePage }) => {
+        console.log(activePage);
+        if (!isNaN(activePage)) {
+            this.setState({ activePage });
+        }
+    }
+
     handleRowClick = po_number => () => {
         let po_trim = po_number.split('.');
-        this.props.history.push('/po/detail/'+po_trim[1]);
+        this.props.history.push('/po/detail/' + po_trim[1]);
     }
 
     render() {
         return (
             <div>
-                <Table sortable selectable celled>
+                <Table sortable selectable celled fixed>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell >
+                            <Table.HeaderCell width={1}>
 
                             </Table.HeaderCell>
                             <Table.HeaderCell >
@@ -60,8 +70,8 @@ export class SearchPurchaseOrderTable extends React.Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {_.map(this.props.PODetailList, ({ po_number, supplier_name, customer_branch_name, status }, index) => (
-                            <Table.Row key={po_number} onClick={this.handleRowClick(po_number)}>
+                        {_.map(this.props.PODetailList[this.state.activePage - 1], ({ po_number, supplier_name, customer_branch_name, status }, index) => (
+                            <Table.Row key={index + 1} onClick={this.handleRowClick(po_number)}>
                                 <Table.Cell>{index + 1}</Table.Cell>
                                 <Table.Cell>{po_number}</Table.Cell>
                                 <Table.Cell>{status}</Table.Cell>
@@ -70,6 +80,13 @@ export class SearchPurchaseOrderTable extends React.Component {
                             </Table.Row>
                         ))}
                     </Table.Body>
+                    <Table.Footer>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan='5'>
+                                <Pagination totalPages={this.props.PODetailList.length} onPageChange={this.handlePaginationChange} />
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Footer>
                 </Table>
             </div>
         );

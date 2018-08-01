@@ -109,7 +109,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
                                 จำนวน
             </Table.HeaderCell>
                             <Table.HeaderCell >
-                                ราคา
+                            ราคา (บาท)
             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -119,7 +119,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
                                 <Table.Cell>{product_name}</Table.Cell>
                                 <Table.Cell>{product_number}</Table.Cell>
                                 <Table.Cell>{order_amount}</Table.Cell>
-                                <Table.Cell>{product_price}</Table.Cell>
+                                <Table.Cell>{product_price*order_amount} ({product_price}/หน่วย)</Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import { Form , Table , Dropdown, Button, Segment } from 'semantic-ui-react';
+import { Icon, Form , Table , Dropdown, Button, Segment } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
@@ -130,6 +130,14 @@ export class NewPurchaseOrder extends React.Component {
   handleDateChange(date, event, target){
     this.setState({
       [target]: date
+    });
+  }
+
+  handleDeleteProduct(event, data, index){
+    let POProductUpdate = this.state.POProduct;
+    POProductUpdate.splice(index, 1);
+    this.setState({
+      POProduct: POProductUpdate
     });
   }
 
@@ -285,7 +293,7 @@ export class NewPurchaseOrder extends React.Component {
             </Table.Row>
         </Table.Body>
       </Table>
-      <Table celled>
+      <Table celled fixed>
       <Table.Header>
           <Table.Row>
             <Table.HeaderCell >
@@ -298,17 +306,21 @@ export class NewPurchaseOrder extends React.Component {
               จำนวน
             </Table.HeaderCell>
             <Table.HeaderCell >
-              ราคา
+              ราคา (บาท)
+            </Table.HeaderCell>
+            <Table.HeaderCell width={1}>
+            
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-        {_.map(POProduct, ({ product_id, product_name, product_number, amount, price }) => (
+        {_.map(POProduct, ({ product_id, product_name, product_number, amount, price }, index) => (
             <Table.Row key={product_id} >
               <Table.Cell>{product_name}</Table.Cell>
               <Table.Cell>{product_number}</Table.Cell>
               <Table.Cell>{amount}</Table.Cell>
-              <Table.Cell>{price}</Table.Cell>
+              <Table.Cell>{price*amount} ({price}/หน่วย)</Table.Cell>
+              <Table.Cell><Icon link name='close' onClick={(e,d) => this.handleDeleteProduct(e,d,index)}/></Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
