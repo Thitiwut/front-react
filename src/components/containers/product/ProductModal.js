@@ -81,6 +81,7 @@ export class ProductModal extends React.Component {
       })
       alert("ปรับราคาใช้แล้ว !");
     }.bind(this));
+    this.props.updateProducts;
   }
 
   handleEditProductName(){
