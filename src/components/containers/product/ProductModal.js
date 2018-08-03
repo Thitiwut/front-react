@@ -80,8 +80,12 @@ export class ProductModal extends React.Component {
         product_price: this.state.new_price,
       })
       alert("ปรับราคาใช้แล้ว !");
+      this.updateProductsTable();
     }.bind(this));
-    this.props.updateProducts;
+  }
+
+  updateProductsTable = () => {
+    this.props.updateProducts();
   }
 
   handleEditProductName(){

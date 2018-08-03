@@ -83,12 +83,16 @@ export class ProductTable extends React.Component {
       }.bind(this));
   }
 
+  childUpdatePriceHandler(){
+    this.getProducts(this.state.selected_suplier_id);
+  }
+
   render() {
     const { column, productData, supplierData, direction, selected_supplier} = this.state
 
     return (
     <div> 
-    <ProductModal updateProducts={this.getProducts(this.state.selected_suplier_id)} ref="productModal"/>
+    <ProductModal updateProducts={this.childUpdatePriceHandler.bind(this)} ref="productModal"/>
     <Dropdown placeholder={selected_supplier} search selection options={supplierData} onChange={(e, data) => this.handleSupplierSelect(e, data)} />
     <Table sortable celled selectable>
     <Table.Header>
