@@ -18,6 +18,7 @@ export class ProductModal extends React.Component {
       product_number: null,
       product_type: null,
       product_price: null,
+      adjust_product_price: '-',
       supplier: null,
       supplier_id: null,
       //Pricing State
@@ -33,6 +34,7 @@ export class ProductModal extends React.Component {
     product_number: null,
     product_type: null,
     product_price: null,
+    adjust_product_price: '-'
   }
 
   handleDateChange(date){
@@ -51,6 +53,7 @@ export class ProductModal extends React.Component {
       product_type: product.product_type,
       product_price: product.product_price,
       supplier: supplier,
+      adjust_product_price: '-',
       supplier_id: supplier_id
     })
   }
@@ -72,14 +75,14 @@ export class ProductModal extends React.Component {
   //Service Calls
   handlePricing(){
     let promise = this._productService.setProductPrice(
-      this.state.product_id, this.state.supplier_id, this.state.date.format("YYYYMMDD"), parseFloat(this.state.new_price).toFixed(2)
+      this.state.product_id, this.state.supplier_id, this.state.date.format("YYYY-MM-DD HH:mm:ss"), parseFloat(this.state.new_price).toFixed(2)
       );
     promise.then(function (response) {
       console.log(response.data);
       this.setState({
-        product_price: this.state.new_price,
+        adjust_product_price: this.state.new_price,
       })
-      alert("ปรับราคาใช้แล้ว !");
+      alert("ราคาจะถูกปรับเป็น " + this.state.new_price + " บาท โดยอัตโนมัติ ในวันที่ " + this.state.date.format("DD/MM/YYYY"));
       this.updateProductsTable();
     }.bind(this));
   }
@@ -101,11 +104,15 @@ export class ProductModal extends React.Component {
 
 
   render() {
-    const { product_id, product_name, product_number, product_type, product_price , supplier} = this.state;
+    const { product_id, product_name, product_number, product_type, product_price , supplier, adjust_product_price} = this.state;
 
     //--styling classes
     const pricingCon = {
       'paddingTop': '10px'
+    };
+
+    const msgHeader = {
+      'margin-left': '10px'
     };
 
     return (
@@ -123,17 +130,23 @@ export class ProductModal extends React.Component {
         <Message.Header>
       Supplier: {supplier}
         </Message.Header>
-  </Message>
+        </Message>
+
+        <Message compact style={msgHeader}> 
+        <Message.Header>
+      ชนิด: {product_type}
+        </Message.Header>
+        </Message>
       <Form onSubmit={(e) => this.handleEditProductName(e)}>
         <Form.Group unstackable widths={2}>
-          <Form.Input defaultValue={product_name} name='product_name' label='ชื่อสินค้า' onChange={(e,d) => this.handleInputChange(e,d)}/>
+          <Form.Input defaultValue={product_name} name='product_name' label='ชื่อสินค้า' onChange={(e,d) => this.handleInputChange(e,d)}/> 
         </Form.Group>
         <Button role="button">แก้ไขชื่อสินค้า</Button>
       </Form>
       <div class="ui divider">
       </div>
       <h3>ราคา</h3>
-      ราคาใช้ปัจจุบัน <Label size="big" tag>{product_price} บาท</Label>
+      ราคาใช้ปัจจุบัน <Label size="big" tag>{product_price} บาท</Label> ราคาใช้ที่จะถูกปรับ <Label size="big" tag>{adjust_product_price} บาท</Label> 
       <div style={pricingCon} ><h3>ตั้งราคาใช้ใหม่</h3>
         <Form onSubmit={(e) => this.handlePricing(e)}>
         <Form.Group widths='equal'>

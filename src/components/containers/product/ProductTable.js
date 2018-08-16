@@ -114,7 +114,7 @@ export class ProductTable extends React.Component {
         <Table.Body>
           {_.map(productData, ({ product_id, product_number, product_name, product_type, product_price }) => (
             <Table.Row key={product_id} onClick={this.handleRowClick( { product_id, product_number, product_name, product_type, product_price, } )}>
-              <Table.Cell>{product_number}</Table.Cell>
+              <Table.Cell>{product_id}</Table.Cell>
               <Table.Cell>{product_name}</Table.Cell>
               <Table.Cell>{product_type}</Table.Cell>
               <Table.Cell>{product_price}</Table.Cell>
