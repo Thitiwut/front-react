@@ -7,7 +7,7 @@ import { SupplierService } from '../../../services/api/SupplierService';
 import { FeedService } from '../../../services/api/FeedService';
 
 const productType = [
-  { key: '1', text: 'regular', value: 'regular' }
+  { key: '1', text: 'กิโลกรัม', value: 'กิโลกรัม' }
 ];
 export class AddProductForm extends React.Component {
 
