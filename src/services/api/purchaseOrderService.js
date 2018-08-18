@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {connect} from 'react-redux';
-const URL = "http://139.59.249.187:8080/order-management";
+const URL = "http://206.189.91.233:8080/order-management";
 
 const config = {
 	headers: {
