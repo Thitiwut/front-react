@@ -51,7 +51,7 @@ export class PurchaseOrderService {
 	}
 
 	//POST REQUEST
-	newPurchaseOrder(po_number, supplier_id, branch_id, order_date, delivery_date, status){
+	newPurchaseOrder(po_number, supplier_id, branch_id, order_date, delivery_date, status, user){
 		return axios.post(URL + '/po', {
 			action: 'new_purchase_order',
 			po_number: po_number,
@@ -59,7 +59,8 @@ export class PurchaseOrderService {
 			branch_id: branch_id,
 			order_date: order_date,
 			delivery_date: delivery_date,
-			status: status
+			status: status,
+			user: user
 		}, config
 		)
 		.catch(function (error) {
@@ -133,11 +134,12 @@ export class PurchaseOrderService {
 		});
 	}
 
-	updateStatus(po_id, status){
+	updateStatus(po_id, status, user){
 		return axios.post(URL + '/po', {
 			action: 'update_status',
 			po_id: po_id,
-			status: status
+			status: status,
+			user: user
 		}, config
 		)
 		.catch(function (error) {

@@ -48,6 +48,7 @@ export class Login extends React.Component {
                 } else {
                     localStorage.setItem("branch_name", result.branch_name);
                     localStorage.setItem("branch_number", result.branch_number);
+                    localStorage.setItem("user_name", result.user_name);
                     this.props.authenticate();
                     this.props.history.push('/');
                 }

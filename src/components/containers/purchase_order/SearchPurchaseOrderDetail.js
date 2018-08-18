@@ -31,7 +31,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
     }
 
     handleStatusClick(e, data) {
-        let promise = this._purchaseOrderService.updateStatus(this.state.POData.po_id, data.value);
+        let promise = this._purchaseOrderService.updateStatus(this.state.POData.po_id, data.value, localStorage.getItem("user_name"));
         promise.then(function (response) {
             alert("อัพเดตสถานะของใบสั่งซื้อเป็น " + data.value + " แล้ว !");
             this.getPO();
@@ -59,6 +59,12 @@ export class SearchPurchaseOrderDetail extends React.Component {
     }
 
     render() {
+
+        //--styling classes
+        const personLabel = {
+            'float': 'right'
+        };
+
         return (
             <div>
                 <Breadcrumb>
@@ -109,7 +115,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
                                 จำนวน
             </Table.HeaderCell>
                             <Table.HeaderCell >
-                            ราคา (บาท)
+                                ราคา (บาท)
             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -119,7 +125,7 @@ export class SearchPurchaseOrderDetail extends React.Component {
                                 <Table.Cell>{product_name}</Table.Cell>
                                 <Table.Cell>{product_number}</Table.Cell>
                                 <Table.Cell>{order_amount}</Table.Cell>
-                                <Table.Cell>{product_price*order_amount} ({product_price}/หน่วย)</Table.Cell>
+                                <Table.Cell>{product_price * order_amount} ({product_price}/หน่วย)</Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>
@@ -144,6 +150,14 @@ export class SearchPurchaseOrderDetail extends React.Component {
                 <Button.Group horizontal labeled icon>
                     <Button icon='file outline' content='ดาวโหลดใบสั่งซื้อ' onClick={(e, d) => this.handleDownloadPOClick(e, d)} />
                 </Button.Group>
+                <Label as='a' color='green' image style={personLabel}>
+                    ผู้ปรับสถานะใบสั่งซื้อล่าสุด
+                        <Label.Detail>{this.state.POData.last_mnt_user}</Label.Detail>
+                </Label>
+                <Label as='a' color='blue' image style={personLabel}>
+                    ผู้เพิ่มใบสั่งซื้อ
+                        <Label.Detail>{this.state.POData.create_user}</Label.Detail>
+                </Label>
             </div>
         );
     }

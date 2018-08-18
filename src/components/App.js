@@ -73,6 +73,7 @@ class App extends React.Component {
             </Menu.Item>
             </NavLink>
             <Menu.Menu position='right'>
+            <Menu.Item header>ผู้ใช้:  {localStorage.getItem("user_name")}</Menu.Item>
             <Menu.Item header>สาขา:  {localStorage.getItem("branch_name")}</Menu.Item>
             <Menu.Item
               name='ออกจากระบบ'

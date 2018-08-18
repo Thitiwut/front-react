@@ -157,7 +157,7 @@ export class NewPurchaseOrder extends React.Component {
     let promise = this._purchaseOrderService.newPurchaseOrder(
       +this.state.po_number, this.state.supplier, this.state.delivery_branch ,
         this.state.order_date.format('YYYY-MM-DD'), this.state.delivery_date.format('YYYY-MM-DD'),
-          "รอการจัดส่ง"
+          "รอการจัดส่ง", localStorage.getItem("user_name")
       );
 
     promise.then(function (response){
