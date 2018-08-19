@@ -23,10 +23,11 @@ export class ProductService {
 	}
 
 	//POST REQUEST
-	addProduct(product_name, product_type, supplier_id){
+	addProduct(product_name, product_id, product_type, supplier_id){
 		return axios.post(URL + '/product', {
 			action: 'add_product',
 			product_name: product_name,
+			product_id: product_id,
 			product_type: product_type,
 			supplier_id: supplier_id
 		}, config

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import { Form } from 'semantic-ui-react';
 import { ProductService } from '../../../services/api/ProductService';
@@ -18,6 +18,7 @@ export class AddProductForm extends React.Component {
     this._feedService = new FeedService();
     this.state = {
       supplier: 0,
+      product_id: null,
       product_name: "",
       product_type: "",
       supplierData: [],
@@ -40,33 +41,43 @@ export class AddProductForm extends React.Component {
 
 
   //Service Calls
-  getSuppliers(){
-      let supplier_options_json = new Array();
-      let promise = this._supplierService.getSupplier();
-      promise.then(function (response){
-        {_.map(response.data, ({ supplier_id, supplier_name }) => (
+  getSuppliers() {
+    let supplier_options_json = new Array();
+    let promise = this._supplierService.getSupplier();
+    promise.then(function (response) {
+      {
+        _.map(response.data, ({ supplier_id, supplier_name }) => (
           supplier_options_json.push({ key: supplier_id, text: supplier_name, value: supplier_id })
-        ))};
-        this.setState({
-          supplierData: supplier_options_json
-        });
-      }.bind(this));
+        ))
+      };
+      this.setState({
+        supplierData: supplier_options_json
+      });
+    }.bind(this));
   }
 
-  addProduct(){
+  addProduct() {
+    let status = "";
     let promise = this._productService.addProduct(
-      this.state.product_name.trim(), this.state.product_type, this.state.supplier
-      );
+      this.state.product_name.trim(), +this.state.product_id, this.state.product_type, this.state.supplier
+    );
     promise.then(function (response) {
-      console.log(response.data);
-      alert("เพิ่มสินค้าสำเร็จ !");
+      console.log(response.data.status);
+      status = response.data.status;
     }.bind(this))
-    .then( () => {
-      let adding_supplier = this.state.supplierData.find((supplier) => {
-        return supplier.value === this.state.supplier;
+      .then(() => {
+        if (status == "Success") {
+          alert("เพิ่มสินค้าสำเร็จ !");
+          let adding_supplier = this.state.supplierData.find((supplier) => {
+            return supplier.value === this.state.supplier;
+          });
+          this._feedService.addFeed("product_added", "", this.state.product_name, adding_supplier.text);
+        }else if(status == "Duplicate"){
+          alert("เพิ่มสินค้าไม่สำเร็จ (ชื่อสินค้าซ้ำ)");
+        }else {
+          alert("เพิ่มสินค้าไม่สำเร็จ (รหัสสินค้าซ้ำ)");
+        }
       });
-      this._feedService.addFeed("product_added", "", this.state.product_name, adding_supplier.text);
-    });
   }
 
   render() {
@@ -74,9 +85,10 @@ export class AddProductForm extends React.Component {
     return (
       <Form onSubmit={(e) => this.handleSubmit(e)}>
         <Form.Group widths='equal'>
-          <Form.Input required fluid label='ชื่อสินค้า' placeholder='-' name='product_name' onChange={(e,d) => this.handleInputChange(e,d)} />
-          <Form.Select required fluid label='ชนิดสินค้า' options={productType} placeholder='-' name='product_type' onChange={(e,d) => this.handleInputChange(e,d)} />
-          <Form.Select required fluid label='Supplier' options={supplierData} placeholder='-' name='supplier' onChange={(e,d) => this.handleInputChange(e,d)} />
+          <Form.Input required fluid label='ชื่อสินค้า' placeholder='-' name='product_name' onChange={(e, d) => this.handleInputChange(e, d)} />
+          <Form.Input required fluid label='รหัสสินค้า' placeholder='-' name='product_id' onChange={(e, d) => this.handleInputChange(e, d)} />
+          <Form.Select required fluid label='ชนิดสินค้า' options={productType} placeholder='-' name='product_type' onChange={(e, d) => this.handleInputChange(e, d)} />
+          <Form.Select required fluid label='Supplier' options={supplierData} placeholder='-' name='supplier' onChange={(e, d) => this.handleInputChange(e, d)} />
         </Form.Group>
         <Form.Button role="button" >เพิ่มสินค้า</Form.Button>
       </Form>
