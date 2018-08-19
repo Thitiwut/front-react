@@ -79,25 +79,25 @@ export class Dashboard extends React.Component {
     return feed;
   }
 
-  reprocessDate(feed){
+  reprocessDate(feed) {
     feed.forEach((item) => {
       if (item.action != "alert") {
-        item.date = item.date.replace("days","วัน")
-        .replace("moments ago", "เมื่อสักครู่")
-        .replace("day", "วัน")
-        .replace("ago","ก่อน")
-        .replace("weeks","อาทิตย์")
-        .replace("years","ปี")
-        .replace("week","อาทิตย์")
-        .replace("year","ปี")
-        .replace("month", "เดือน")
-        .replace("months", "เดือน")
-        .replace("hours", "ชั่วโมง")
-        .replace("hour", "ชั่วโมง")
-        .replace("minutes", "นาที")
-        .replace("minute", "นาที")
-        .replace("seconds", "วินาที")
-        .replace("second", "วินาที");
+        item.date = item.date.replace("days", "วัน")
+          .replace("moments ago", "เมื่อสักครู่")
+          .replace("day", "วัน")
+          .replace("ago", "ก่อน")
+          .replace("weeks", "อาทิตย์")
+          .replace("years", "ปี")
+          .replace("week", "อาทิตย์")
+          .replace("year", "ปี")
+          .replace("month", "เดือน")
+          .replace("months", "เดือน")
+          .replace("hours", "ชั่วโมง")
+          .replace("hour", "ชั่วโมง")
+          .replace("minutes", "นาที")
+          .replace("minute", "นาที")
+          .replace("seconds", "วินาที")
+          .replace("second", "วินาที");
       }
     });
     return feed;
@@ -108,14 +108,20 @@ export class Dashboard extends React.Component {
     promise.then(function (response) {
       let processedSummary = this.reprocessSummary(response.data);
       let fullyProcessedSummary = this.reprocessDate(processedSummary);
-      this.setState({
-        feed: fullyProcessedSummary
-      });
+      if (fullyProcessedSummary.length === 0) {
+        this.setState({
+          feed: "ไม่มีข้อมูล"
+        });
+      } else {
+        this.setState({
+          feed: fullyProcessedSummary
+        });
+      }
     }.bind(this));
   }
 
   render() {
-    if (this.state.feed != null) {
+    if (this.state.feed != null && this.state.feed != "ไม่มีข้อมูล") {
       return (
         <div>
           <h2 className="alt-header">รายการแจ้งเตือน</h2>
@@ -124,15 +130,25 @@ export class Dashboard extends React.Component {
           </Segment>
         </div>
       );
-    } else {
+    } else if (this.state.feed === "ไม่มีข้อมูล") {
+      return (
+      <div>
+        <h2 className="alt-header">รายการแจ้งเตือน</h2>
+        <Segment>
+          ไม่มีข้อมูล
+          </Segment>
+      </div>
+      );
+    }
+    else {
       return (
         <div>
           <h2 className="alt-header">รายการแจ้งเตือน</h2>
           <Container>
             <Dimmer active inverted>
-              <Loader inverted content='กำลังโหลด'/>
+              <Loader inverted content='กำลังโหลด' />
             </Dimmer>
-            </Container>
+          </Container>
         </div>
       );
     }
