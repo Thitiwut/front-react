@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-const URL = "http://139.59.249.187:8081";
+const URL = "http://206.189.91.233:8081";
 const config = {
     headers: {
         'Content-Type': 'application/json',
