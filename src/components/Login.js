@@ -32,29 +32,21 @@ export class Login extends React.Component {
 
     authenticate() {
         let promise = this._authService.getAuth(this.state.username, this.state.password);
-        promise.then((res) =>
-            res.text()
-        ).then((data) => {
-            return JSON.parse(aes.decrypt(data.toString(), "auth").toString(crypto.enc.Utf8))
-        }).then((auth_json) => {
-            var result = auth_json.find(obj => {
-                return obj.username === this.state.username
-            })
-            if (result == null) {
-                alert("ไม่มี user ในระบบ")
+        promise.then((res) => {
+            let response = res.data
+            if (response === "no_user_found") {
+                alert("ไม่มี user ในระบบ");
+            } else if (response === "invalid_password") {
+                alert("password ไม่ถูกต้อง")
             } else {
-                if (result.password != this.state.password) {
-                    alert("password ไม่ถูกต้อง")
-                } else {
-                    localStorage.setItem("branch_name", result.branch_name);
-                    localStorage.setItem("branch_number", result.branch_number);
-                    localStorage.setItem("user_name", result.user_name);
-                    this.props.authenticate();
-                    this.props.history.push('/');
-                }
+                localStorage.setItem("branch_name", response.branch_name);
+                localStorage.setItem("branch_number", response.branch_number);
+                localStorage.setItem("user_name", response.user_name);
+                localStorage.setItem("user_type", response.type);
+                this.props.authenticate();
+                this.props.history.push('/');
             }
-        }
-        );
+        });
     }
 
     render() {
