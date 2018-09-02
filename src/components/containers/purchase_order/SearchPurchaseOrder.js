@@ -148,7 +148,7 @@ export class SearchPurchaseOrder extends React.Component {
               <Form.Input label='เลข PO' placeholder='-' name='search_po' onChange={(e, d) => this.handleInputChange(e, d)} />
               <Form.Select label='สถานะ' options={delivery_options} placeholder='-' name='search_stat' onChange={(e, d) => this.handleInputChange(e, d)} />
               <Form.Select label='Supplier' options={this.state.supplierData} placeholder='-' name='search_sup' onChange={(e, d) => this.handleInputChange(e, d)} />
-              <Form.Select label='สาขา' options={this.state.branch_selection} placeholder='-' name='search_branch' onChange={(e, d) => this.handleInputChange(e, d)} />
+              <Form.Select label='สาขา' search noResultsMessage='ไม่พบสาขา' options={this.state.branch_selection} placeholder='-' name='search_branch' onChange={(e, d) => this.handleInputChange(e, d)} />
               <Button animated>
                 <Button.Content visible>ค้นหา</Button.Content>
                 <Button.Content hidden>

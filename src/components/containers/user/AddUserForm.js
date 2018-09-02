@@ -98,7 +98,7 @@ export class AddUserForm extends React.Component {
                     <Form.Input required fluid label='Password' placeholder='-' name='password' onChange={(e, d) => this.handleInputChange(e, d)} />
                     <Form.Input required fluid label='ชื่อผู้ใช้' placeholder='-' name='user_name' onChange={(e, d) => this.handleInputChange(e, d)} />
                     <Form.Select required fluid label='ระดับ' options={userType} placeholder='-' name='type' onChange={(e, d) => this.handleInputChange(e, d)} />
-                    <Form.Select required fluid label='สาขา' options={this.state.branch_selection} placeholder='-' name='branch_number' onChange={(e, d) => this.handleInputChange(e, d)} />
+                    <Form.Select required search noResultsMessage='ไม่พบสาขา' fluid label='สาขา' options={this.state.branch_selection} placeholder='-' name='branch_number' onChange={(e, d) => this.handleInputChange(e, d)} />
                 </Form.Group>
                 <Form.Button role="button" >เพิ่มผู้ใช้</Form.Button>
             </Form>
