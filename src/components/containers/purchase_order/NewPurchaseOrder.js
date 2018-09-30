@@ -241,7 +241,7 @@ export class NewPurchaseOrder extends React.Component {
         </div>
         <div class="field">
           <Form.Group>
-          <Form.Select required  label='สาขาที่ส่ง' options={this.state.branch_selection} placeholder='-' name='delivery_branch' onChange={(e,d) => this.handleInputChange(e,d)} />
+          <Form.Select required  search noResultsMessage='ไม่พบสาขา' label='สาขาที่ส่ง' options={this.state.branch_selection} placeholder='-' name='delivery_branch' onChange={(e,d) => this.handleInputChange(e,d)} />
           </Form.Group>
         </div>
         <div class="field">
