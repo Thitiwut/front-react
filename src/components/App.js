@@ -8,6 +8,7 @@ import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./Login";
 
 import ProductPage from "./containers/product/ProductPage";
+import PricePage from "./containers/price/PricePage";
 import PurchaseOrderPage from "./containers/purchase_order/PurchaseOrderPage";
 import UserPage from "./containers/user/UserPage";
 import { Menu } from "semantic-ui-react";
@@ -49,6 +50,15 @@ class MainMenu extends React.Component {
             >
               สินค้า
             </Menu.Item>
+          </NavLink>
+          <NavLink to="/price">
+            <Menu.Item
+              name="price"
+              active={this.props.activeItem === "price"}
+              onClick={this.props.handleItemClick}
+            >
+              ราคา
+          </Menu.Item>
           </NavLink>
           <NavLink to="/user">
             <Menu.Item
@@ -99,6 +109,15 @@ class MainMenu extends React.Component {
             >
               สินค้า
         </Menu.Item>
+          </NavLink>
+          <NavLink to="/price">
+            <Menu.Item
+              name="price"
+              active={this.props.activeItem === "price"}
+              onClick={this.props.handleItemClick}
+            >
+              ราคา
+          </Menu.Item>
           </NavLink>
           <Menu.Menu position='right'>
             <Menu.Item header>ผู้ใช้:  {localStorage.getItem("user_name")}</Menu.Item>
@@ -163,6 +182,15 @@ class MainMenu extends React.Component {
             >
               สินค้า
         </Menu.Item>
+          </NavLink>
+          <NavLink to="/price">
+            <Menu.Item
+              name="price"
+              active={this.props.activeItem === "price"}
+              onClick={this.props.handleItemClick}
+            >
+              ราคา
+          </Menu.Item>
           </NavLink>
           <Menu.Menu position='right'>
             <Menu.Item header>ผู้ใช้:  {localStorage.getItem("user_name")}</Menu.Item>
@@ -255,6 +283,7 @@ class App extends React.Component {
             <Route path="/product" component={ProductPage} />
             <Route path="/login" component={LoginPage} />
             <Route path="/user" component={UserPage} />
+            <Route path="/price" component={PricePage} />
             <Route component={NotFoundPage} />
           </Switch>
         </div >
