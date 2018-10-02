@@ -84,7 +84,6 @@ export class ProductPriceTable extends React.Component {
     this.setState({
       productPricingData: productPricingData
     })
-    console.log(this.state.productPricingData)
   }
 
   //Service Calls
@@ -198,7 +197,7 @@ export class ProductPriceTable extends React.Component {
                 <div class="ui right labeled input">
 
                 <DatePicker name='date'
-                selected={this.state.productPricingData[index].active_date}
+                selected={this.getActiveDateByProduct(product_id)}
                 dateFormat="YYYY/MM/DD"
                 onChange={(e,d) => this.handleDateChange(e,d, product_id)}
               /><div class="ui basic label label">วันที่ใช้ราคา</div></div></Table.Cell>
