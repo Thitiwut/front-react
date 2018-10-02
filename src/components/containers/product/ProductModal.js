@@ -122,7 +122,7 @@ export class ProductModal extends React.Component {
         closeOnDimmerClick={false}
         closeIcon
         >
-      <Modal.Header>ข้อมูลสินค้า - หมายเลข {product_number}
+      <Modal.Header>ข้อมูลสินค้า - หมายเลข {product_id}
       </Modal.Header>
       <Modal.Content>
       <Modal.Description>
